@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.math.MathUtils
+import com.benson.study.libgdx.develop.guide.main.control.KeyboardController
 
 class WorldController {
 
@@ -14,6 +15,9 @@ class WorldController {
 
     lateinit var testSprites: Array<Sprite>
     private var selectedSprite = 0
+    private val keyboardController by lazy {
+        KeyboardController(5F)
+    }
 
     init {
         initSprites()
@@ -49,6 +53,7 @@ class WorldController {
             newRotation += 90 * delta
             newRotation %= 360
             rotation = newRotation
+            keyboardController.updateByKeyPress(delta).invoke(this)
         }
     }
 }
