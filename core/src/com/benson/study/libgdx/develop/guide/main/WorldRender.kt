@@ -17,7 +17,7 @@ class WorldRender(private val controller: WorldController) : Disposable {
     }
 
     fun resize(width: Int, height: Int) {
-        camera.viewportHeight = GameConfigConstant.VIEWPORT_HEIGHT / height * width
+        camera.viewportWidth = GameConfigConstant.VIEWPORT_HEIGHT / height * width
         camera.update()
     }
 
