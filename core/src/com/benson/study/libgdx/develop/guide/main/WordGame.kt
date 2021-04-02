@@ -1,16 +1,20 @@
 package com.benson.study.libgdx.develop.guide.main
 
 import com.badlogic.gdx.Application
-import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
+import com.benson.study.libgdx.develop.guide.lifecycle.ApplicationDispatcher
 
-open class WordGame : ApplicationAdapter() {
+open class WordGame : ApplicationDispatcher() {
 
     private lateinit var controller: WorldController
     private lateinit var render: WorldRender
 
     private var running = true
+
+    init {
+        lifecycle().addObserver(TestLifecycleObserver())
+    }
 
     override fun create() {
         super.create()
