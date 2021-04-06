@@ -11,4 +11,10 @@ interface IKeyboardController {
 
     fun updateByKeyPress(delta: Float): Sprite.() -> Unit
 
+    fun pauseByKeyPress(): Boolean
+
+    fun resumeByKeyPress(): Boolean
+
+    fun exitByKeyPress(): Boolean
+
 }

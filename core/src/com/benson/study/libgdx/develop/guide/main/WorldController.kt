@@ -4,19 +4,24 @@ import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.math.MathUtils
+import com.benson.study.libgdx.develop.guide.device.control.GameController
 import com.benson.study.libgdx.develop.guide.main.control.KeyboardController
 
 class WorldController {
 
     companion object {
         private const val SPRITE_COUNT = 5 // 精灵个数
-        private const val SPRITE_SIZE = 32 // 精灵大小
+        private const val SPRITE_SIZE = 32 // 精灵大小Amble-Regular-26.fnt
     }
 
     lateinit var testSprites: Array<Sprite>
     private var selectedSprite = 0
-    private val keyboardController by lazy {
-        KeyboardController(5F)
+
+    val gameController by lazy {
+        GameController()
+    }
+    val keyboardController by lazy {
+        KeyboardController(gameController, 5F)
     }
 
     init {

@@ -4,22 +4,28 @@ import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.benson.study.libgdx.develop.guide.lifecycle.ApplicationDispatcher
+import com.benson.study.libgdx.develop.guide.main.control.WordGameControlListener
+import com.benson.study.libgdx.develop.guide.main.global.UIGlobal
 
 open class WordGame : ApplicationDispatcher() {
 
-    private lateinit var controller: WorldController
+    private val controller by lazy {
+        WorldController()
+    }
     private lateinit var render: WorldRender
+    private val gameControlListener: WordGameControlListener = WordGameControlListener()
 
-    private var running = true
-
-    init {
+    fun init() {
         lifecycle().addObserver(TestLifecycleObserver())
+        register(gameControlListener)
+        controller.gameController.registerListener(gameControlListener)
+        lifecycle().addObserver(UIGlobal)
     }
 
     override fun create() {
         super.create()
+        init()
         Gdx.app.logLevel = Application.LOG_DEBUG // 日志级别控制在debug
-        controller = WorldController()
         render = WorldRender(controller)
     }
 
@@ -28,19 +34,10 @@ open class WordGame : ApplicationDispatcher() {
         render.resize(width, height)
     }
 
-    override fun pause() {
-        super.pause()
-        running = false
-    }
-
-    override fun resume() {
-        super.resume()
-        running = true
-    }
-
     override fun render() {
         super.render()
-        if (running) {
+        controller.keyboardController.listenSystemPress()
+        if (gameControlListener.isRunning) {
             controller.update(Gdx.graphics.deltaTime)
         }
 
@@ -53,5 +50,6 @@ open class WordGame : ApplicationDispatcher() {
     override fun dispose() {
         super.dispose()
         render.dispose()
+        controller.gameController.unreigsterListener(gameControlListener)
     }
 }
