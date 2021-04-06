@@ -2,6 +2,7 @@ package com.benson.study.libgdx.develop.guide.main.control
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.InputAdapter
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.math.Vector2
@@ -18,21 +19,30 @@ import com.benson.study.libgdx.develop.guide.util.Platform
 /**
  * 键盘控制精灵
  */
-class KeyboardController(private val gameController: IGameController, private val speed: Float) : IKeyboardController {
+class KeyboardController(private val gameController: IGameController, private val speed: Float) : InputAdapter(), IKeyboardController {
+
+    override fun keyDown(keycode: Int): Boolean {
+        return listenSystemPress()
+    }
 
     override fun updateByKeyPress(delta: Float): Sprite.() -> Unit {
         return if (Platform.isDesktop()) { // 电脑桌面平台
             {
                 val moveSpeed = speed * delta
                 val moves = Vector2(0F, 0F)
-                if (Gdx.input.isKeyPressed(Input.Keys.A)) { // left
-                    moves.x = -moveSpeed
-                } else if (Gdx.input.isKeyPressed(Input.Keys.W)) { // top
-                    moves.y = +moveSpeed
-                } else if (Gdx.input.isKeyPressed(Input.Keys.D)) { // right
-                    moves.x = +moveSpeed
-                } else if (Gdx.input.isKeyPressed(Input.Keys.S)) { // bottom
-                    moves.y = -moveSpeed
+                when {
+                    Gdx.input.isKeyPressed(Input.Keys.A) -> { // left
+                        moves.x = -moveSpeed
+                    }
+                    Gdx.input.isKeyPressed(Input.Keys.W) -> { // top
+                        moves.y = +moveSpeed
+                    }
+                    Gdx.input.isKeyPressed(Input.Keys.D) -> { // right
+                        moves.x = +moveSpeed
+                    }
+                    Gdx.input.isKeyPressed(Input.Keys.S) -> { // bottom
+                        moves.y = -moveSpeed
+                    }
                 }
                 translate(moves.x, moves.y)
             }
@@ -106,14 +116,8 @@ class KeyboardController(private val gameController: IGameController, private va
         }
     }
 
-    fun listenSystemPress() {
-        if (pauseByKeyPress()) {
-
-        } else if (resumeByKeyPress()) {
-
-        } else if (exitByKeyPress()) {
-
-        }
+    fun listenSystemPress(): Boolean {
+        return pauseByKeyPress() || resumeByKeyPress() || exitByKeyPress()
     }
 
 }

@@ -1,5 +1,7 @@
 package com.benson.study.libgdx.develop.guide.main
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
@@ -20,12 +22,17 @@ class WorldController {
     val gameController by lazy {
         GameController()
     }
-    val keyboardController by lazy {
+
+    private val inputProcessor = InputMultiplexer()
+
+    private val keyboardController by lazy {
         KeyboardController(gameController, 5F)
     }
 
     init {
         initSprites()
+        Gdx.input.inputProcessor = inputProcessor
+        inputProcessor.addProcessor(keyboardController)
     }
 
     fun update(delta: Float) {

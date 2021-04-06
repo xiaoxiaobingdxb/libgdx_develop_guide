@@ -36,7 +36,6 @@ open class WordGame : ApplicationDispatcher() {
 
     override fun render() {
         super.render()
-        controller.keyboardController.listenSystemPress()
         if (gameControlListener.isRunning) {
             controller.update(Gdx.graphics.deltaTime)
         }

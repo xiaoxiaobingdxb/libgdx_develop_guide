@@ -19,7 +19,7 @@ class WorldRender(private val controller: WorldController) : Disposable {
         update()
     }
 
-    private val mainStage = Stage(FillViewport(GameConfigConstant.VIEWPORT_WIDTH, GameConfigConstant.VIEWPORT_HEIGHT))
+    private val mainStage = Stage(FillViewport(GameConfigConstant.WIDTH, GameConfigConstant.HEIGHT))
     init {
         UIGlobal.currentStage = mainStage
     }
