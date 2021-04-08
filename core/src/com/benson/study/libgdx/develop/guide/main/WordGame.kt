@@ -4,7 +4,6 @@ import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.benson.study.libgdx.develop.guide.lifecycle.ApplicationDispatcher
-import com.benson.study.libgdx.develop.guide.main.control.WordGameControlListener
 import com.benson.study.libgdx.develop.guide.main.global.UIGlobal
 
 open class WordGame : ApplicationDispatcher() {
@@ -13,12 +12,10 @@ open class WordGame : ApplicationDispatcher() {
         WorldController()
     }
     private lateinit var render: WorldRender
-    private val gameControlListener: WordGameControlListener = WordGameControlListener()
 
     fun init() {
-        lifecycle().addObserver(TestLifecycleObserver())
-        register(gameControlListener)
-        controller.gameController.registerListener(gameControlListener)
+//        lifecycle().addObserver(TestLifecycleObserver())
+        register(controller)
         lifecycle().addObserver(UIGlobal)
     }
 
@@ -36,7 +33,7 @@ open class WordGame : ApplicationDispatcher() {
 
     override fun render() {
         super.render()
-        if (gameControlListener.isRunning) {
+        if (controller.isRunning()) {
             controller.update(Gdx.graphics.deltaTime)
         }
 
@@ -49,6 +46,5 @@ open class WordGame : ApplicationDispatcher() {
     override fun dispose() {
         super.dispose()
         render.dispose()
-        controller.gameController.unreigsterListener(gameControlListener)
     }
 }

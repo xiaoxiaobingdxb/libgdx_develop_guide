@@ -1,17 +1,11 @@
 package com.benson.study.libgdx.develop.guide.main.control
 
-import com.badlogic.gdx.ApplicationListener
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.scenes.scene2d.Action
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog
-import com.badlogic.gdx.scenes.scene2d.ui.Window
-import com.benson.study.libgdx.develop.guide.device.control.IGameControlListener
-import com.benson.study.libgdx.develop.guide.font.GdxFont
 
-class WordGameControlListener : IGameControlListener, ApplicationListener {
+class WordGameControlListener : MultiGameController {
 
-    var isRunning = true
+    private var isRunning = true
+    override fun isRunning(): Boolean = isRunning
 
     override fun onPause() {
         super.onPause()
@@ -26,6 +20,10 @@ class WordGameControlListener : IGameControlListener, ApplicationListener {
     override fun onExit() {
         super.onExit()
         Gdx.app.exit()
+    }
+
+    override fun onReset() {
+        super.onReset()
     }
 
     override fun create() {

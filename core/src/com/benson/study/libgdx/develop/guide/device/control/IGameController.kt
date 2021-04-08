@@ -11,4 +11,6 @@ interface IGameController {
 
     fun exit()
 
+    fun reset()
+
 }

@@ -19,4 +19,8 @@ interface IGameControlListener {
 
     }
 
+    fun onReset() {
+
+    }
+
 }

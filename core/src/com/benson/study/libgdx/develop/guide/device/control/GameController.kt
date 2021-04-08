@@ -10,13 +10,15 @@ open class GameController : IGameController {
     enum class GameEvent(val value: Int) {
         PAUSE(PAUSE_VALUE),
         RESUME(RESUME_VALUE),
-        EXIT(EXIT_VALUE)
+        EXIT(EXIT_VALUE),
+        RESET(RESUME_VALUE)
     }
 
     private companion object {
         const val PAUSE_VALUE = 0
         const val RESUME_VALUE = 1
         const val EXIT_VALUE = 2
+        const val RESET_VALUE = 3
     }
 
     private val listeners: MutableList<IGameControlListener> = CopyOnWriteArrayList()
@@ -35,6 +37,7 @@ open class GameController : IGameController {
                 GameEvent.PAUSE -> it.onPause()
                 GameEvent.RESUME -> it.onResume()
                 GameEvent.EXIT -> it.onExit()
+                GameEvent.RESET -> it.onReset()
             }
         }
     }
@@ -49,6 +52,10 @@ open class GameController : IGameController {
 
     override fun exit() {
         dispatchEvent(GameEvent.EXIT)
+    }
+
+    override fun reset() {
+        dispatchEvent(GameEvent.RESET)
     }
 
 }

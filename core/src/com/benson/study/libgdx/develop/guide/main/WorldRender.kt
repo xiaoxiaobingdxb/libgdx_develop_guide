@@ -1,6 +1,5 @@
 package com.benson.study.libgdx.develop.guide.main
 
-import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
@@ -14,12 +13,13 @@ import com.benson.study.libgdx.develop.guide.main.global.UIGlobal
 class WorldRender(private val controller: WorldController) : Disposable {
 
     private val batch: Batch = SpriteBatch()
-    private val camera: Camera = OrthographicCamera(GameConfigConstant.VIEWPORT_WIDTH, GameConfigConstant.VIEWPORT_HEIGHT).apply {
+    private val camera = OrthographicCamera(GameConfigConstant.VIEWPORT_WIDTH, GameConfigConstant.VIEWPORT_HEIGHT).apply {
         position.set(Vector3(0F, 0F, 0F))
         update()
     }
 
-    private val mainStage = Stage(FillViewport(GameConfigConstant.WIDTH, GameConfigConstant.HEIGHT))
+    private val mainStage = Stage(FillViewport(0F, 0F)) //Stage(FillViewport(GameConfigConstant.WIDTH, GameConfigConstant.HEIGHT))
+
     init {
         UIGlobal.currentStage = mainStage
     }
@@ -32,6 +32,7 @@ class WorldRender(private val controller: WorldController) : Disposable {
     fun render() {
         batch.projectionMatrix = camera.combined
         batch.begin()
+        controller.applyTo(camera)
         renderSprites()
         mainStage.act()
         mainStage.draw()

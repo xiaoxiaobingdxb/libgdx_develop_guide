@@ -3,29 +3,32 @@ package com.benson.study.libgdx.develop.guide.main.control
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.InputAdapter
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton
-import com.badlogic.gdx.scenes.scene2d.ui.Window
-import com.benson.study.libgdx.develop.guide.config.GameConfigConstant
-import com.benson.study.libgdx.develop.guide.device.control.IGameController
-import com.benson.study.libgdx.develop.guide.device.control.IKeyboardController
-import com.benson.study.libgdx.develop.guide.font.GdxFont
-import com.benson.study.libgdx.develop.guide.main.global.UIGlobal
+import com.benson.study.libgdx.develop.guide.main.WorldController
 import com.benson.study.libgdx.develop.guide.util.Platform
 
 /**
  * 键盘控制精灵
  */
-class KeyboardController(private val gameController: IGameController, private val speed: Float) : InputAdapter(), IKeyboardController {
+class KeyboardController(private val wordController: WorldController, private val speed: Float) : InputAdapter() {
 
     override fun keyDown(keycode: Int): Boolean {
-        return listenSystemPress()
+        return when (keycode) {
+            Input.Keys.SPACE -> {
+                pauseByKeyPress() || resumeByKeyPress()
+            }
+            Input.Keys.ESCAPE -> exitByKeyPress()
+            Input.Keys.R -> resetByKeyPress()
+            Input.Keys.N -> {
+                wordController.nextSprite()
+                true
+            }
+            else -> super.keyDown(keycode)
+        }
     }
 
-    override fun updateByKeyPress(delta: Float): Sprite.() -> Unit {
+    fun updateByKeyPress(delta: Float): Sprite.() -> Unit {
         return if (Platform.isDesktop()) { // 电脑桌面平台
             {
                 val moveSpeed = speed * delta
@@ -55,69 +58,60 @@ class KeyboardController(private val gameController: IGameController, private va
 
     private fun pauseOrResume() {
         if (paused) {
-            gameController.pause()
+            wordController.gameController.pause()
         } else {
-            gameController.resume()
+            wordController.gameController.resume()
         }
     }
 
-    override fun pauseByKeyPress(): Boolean {
-        return if (Platform.isDesktop()) { // 电脑桌面平台
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && !paused) {
-                paused = true
-                pauseOrResume()
-                true
-            } else {
-                false
-            }
+    private fun pauseByKeyPress(): Boolean {
+        return if (!paused) {
+            paused = true
+            pauseOrResume()
+            true
         } else {
             false
         }
     }
 
-    override fun resumeByKeyPress(): Boolean {
-        return if (Platform.isDesktop()) { // 电脑桌面平台
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && paused) {
-                paused = false
-                pauseOrResume()
-                true
-            } else {
-                false
-            }
+    private fun resumeByKeyPress(): Boolean {
+        return if (paused) {
+            paused = false
+            pauseOrResume()
+            true
         } else {
             false
         }
     }
 
-    override fun exitByKeyPress(): Boolean {
-        return if (Platform.isDesktop()) {
-            val stage = UIGlobal.currentStage
-            if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE) && stage != null) {
-                var dialog: Dialog? = null
-                dialog = Dialog(GameConfigConstant.GAME_NAME, Window.WindowStyle(GdxFont.REGULAR_26, Color.BLACK, null))
-                        .button(TextButton("确定", TextButton.TextButtonStyle(null, null, null, GdxFont.REGULAR_26)).apply {
-                            addListener {
-                                Gdx.app.exit()
-                                true
-                            }
-                        })
-                        .button(TextButton("取消", TextButton.TextButtonStyle(null, null, null, GdxFont.REGULAR_26)).apply {
-                            addListener {
-                                dialog?.hide()
-                                true
-                            }
-                        }).show(stage)
-                true
-            } else {
-                false
-            }
-        } else {
-            false
-        }
+    private fun exitByKeyPress(): Boolean {
+        wordController.gameController.exit()
+        return true
+//        val stage = UIGlobal.currentStage
+//        return if (stage != null) {
+//            var dialog: Dialog? = null
+//            dialog = Dialog(GameConfigConstant.GAME_NAME, Window.WindowStyle(GdxFont.REGULAR_26, Color.BLACK, null))
+//                    .button(TextButton("确定", TextButton.TextButtonStyle(null, null, null, GdxFont.REGULAR_26)).apply {
+//                        addListener {
+//                            Gdx.app.exit()
+//                            true
+//                        }
+//                    })
+//                    .button(TextButton("取消", TextButton.TextButtonStyle(null, null, null, GdxFont.REGULAR_26)).apply {
+//                        addListener {
+//                            dialog?.hide()
+//                            true
+//                        }
+//                    }).show(stage)
+//            true
+//        } else {
+//            false
+//        }
     }
 
-    fun listenSystemPress(): Boolean {
-        return pauseByKeyPress() || resumeByKeyPress() || exitByKeyPress()
+    private fun resetByKeyPress(): Boolean {
+        wordController.gameController.reset()
+        return true
     }
 
 }
